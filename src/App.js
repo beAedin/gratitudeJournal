@@ -5,7 +5,7 @@ import { Routes, BrowserRouter, Route } from "react-router-dom";
 import Main from "./pages/Main";
 import List from "./pages/List";
 import Edit from "./components/Edit";
-import AllView from "./pages/RandomView";
+import AllView from "./pages/AllView";
 import RandomView from "./pages/RandomView";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
                     <Route path="/list" element={<List />}></Route>
                     <Route path="/edit" element={<Edit />}></Route>
                     <Route path="/allview" element={<AllView />}></Route>
-                    <Route path="/randomView" element={<RandomView />}></Route>
+                    {/* <Route path="/randomView" element={<RandomView />}></Route> */}
                     {/* <Route path="/edit/:id" element={<Edit />}></Route> */}
                 </Routes>
                 {/* <RouteTest /> */}

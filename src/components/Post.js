@@ -1,3 +1,5 @@
+import React from "react";
+
 const Post = ({
     content,
     onCreate,
@@ -35,4 +37,4 @@ const Post = ({
         </div>
     );
 };
-export default Post;
+export default React.memo(Post);

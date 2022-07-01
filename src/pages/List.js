@@ -2,16 +2,18 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Post from "../components/Post";
 import PostItem from "../components/PostItem";
+import loadData from "../components/loadData";
 
 const List = () => {
     const nextId = useRef(1);
+    const contentRef = useRef();
+    const navigate = useNavigate();
+
     const [post, setPost] = useState([]);
     const [postList, setPostList] = useState([]);
     const [content, setContent] = useState("");
     const [date, setDate] = useState(new Date());
     const [editId, setEditId] = useState();
-    const contentRef = useRef();
-    const navigate = useNavigate();
     const [isEdit, setIsEdit] = useState(false);
 
     const header = `${date.getFullYear()}.${
@@ -22,37 +24,6 @@ const List = () => {
         setContent(e.target.value);
     };
 
-    const loadData = () => {
-        if (post.length >= 1) {
-            const startDay = new Date(
-                date.getFullYear(),
-                date.getMonth() + 1,
-                0,
-                0,
-                0,
-                0
-            ).getTime();
-
-            const endDay = new Date(
-                date.getFullYear(),
-                date.getMonth() + 1,
-                0,
-                23,
-                59,
-                59
-            ).getTime();
-
-            setPostList(
-                post.filter((el) => startDay <= el.date && el.date <= endDay)
-            );
-        }
-    };
-
-    // Time - Today filtering
-    useEffect(() => {
-        loadData();
-    }, [date, post]);
-
     // READ
     useEffect(() => {
         const items = JSON.parse(localStorage.getItem("gratitude"));
@@ -60,7 +31,23 @@ const List = () => {
         if (items) {
             nextId.current = parseInt(items[0].id) + 1;
         }
+        if (!items) {
+            const newData = {
+                id: nextId.current,
+                content: content,
+            };
+            const upload = [newData];
+            setPost(upload);
+            localStorage.setItem("gratitude", JSON.stringify(upload));
+            setPost([newData]);
+            setPostList([newData]);
+        }
     }, []);
+
+    // Time - Today filtering
+    useEffect(() => {
+        loadData(post, setPostList, date);
+    }, [date, post]);
 
     // CREATE
     const onCreate = () => {
@@ -113,7 +100,7 @@ const List = () => {
 
     return (
         <div class="flex flex-col items-center h-screen ">
-            <h1 class="mt text-8xl text-center font-title pt-20 text-yellow-400">
+            <h1 class="text-8xl text-center font-title pt-20 text-yellow-400">
                 I'm Grateful for...
             </h1>
             <section class="bg-amber-100 w-3/4 h-full mt-24 overflow-auto p-12">
@@ -133,7 +120,7 @@ const List = () => {
                         onEditPost={onEditPost}
                     ></Post>
                     <div class="h-full">
-                        {!post.id ? (
+                        {post.length > 0 ? (
                             postList.map((it) => (
                                 <PostItem
                                     key={it.id}
@@ -154,7 +141,7 @@ const List = () => {
                                 navigate("/allview");
                             }}
                         >
-                            All gratitude
+                            View gratitude reciepts
                         </button>
                     </div>
                 </div>

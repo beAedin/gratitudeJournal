@@ -1,3 +1,4 @@
+import React from "react";
 const PostItem = ({ onEdit, onDelete, post }) => {
     const { content, id } = post;
     return (
@@ -25,4 +26,4 @@ const PostItem = ({ onEdit, onDelete, post }) => {
     );
 };
 
-export default PostItem;
+export default React.memo(PostItem);
